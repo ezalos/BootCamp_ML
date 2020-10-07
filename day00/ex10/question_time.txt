@@ -1,0 +1,17 @@
+1 - Why do we concatenate a column of ones to the left of the x vector when we use the linear algebra trick?
+The formula is ax + b.
+We add column of ones in x so it account for the constant b
+It allow us to directly multiply theta vector with x
+
+2 - Why does the cost function square the distances between the data points and their predicted values?
+It allow a stronger punition for bad results and only positive values
+
+3 - What does the cost function’s output represent?
+How much does it cost to use our model instead of the real values
+
+4 - Toward which value do we want the cost function to tend? What would that mean?
+0. It will mean that our model predict perfectly
+
+5 - Do you understand why are matrix multiplications are not commutative?
+[m, n] * [n, p] -> [m, p]
+matrix mult 'is' (rows of m1) * (cols of m2). It's an asymetric operation

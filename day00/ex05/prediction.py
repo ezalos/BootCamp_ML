@@ -1,5 +1,7 @@
 import sys
-sys.path.insert(1, '/home/ezalos/42/Bootcamp_Python/bootcamp_machine-learning/day00/ex04')
+path = "/Users/ldevelle/42/42-AI/BootCamp_ML/day00/ex04"
+# path = '/home/ezalos/42/Bootcamp_Python/bootcamp_machine-learning/day00/ex04'
+sys.path.insert(1, path)
 from tools import add_intercept
 import numpy as np
 

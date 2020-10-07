@@ -1,6 +1,7 @@
 import sys
-sys.path.insert(1, '/home/ezalos/42/Bootcamp_Python/\
-bootcamp_machine-learning/day00/ex05')
+path = "/Users/ldevelle/42/42-AI/BootCamp_ML/day00/ex05"
+# path = '/home/ezalos/42/Bootcamp_Python/bootcamp_machine-learning/day00/ex05'
+sys.path.insert(1, path)
 from prediction import predict_
 import numpy as np
 import matplotlib.pyplot as plt
