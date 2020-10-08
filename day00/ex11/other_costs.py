@@ -2,6 +2,24 @@ import numpy as np
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from math import sqrt
 
+def cost_(y, y_hat):
+	"""
+	Description:
+	Calculates the value of cost function.
+	Args:
+	y: has to be an numpy.ndarray, a vector.
+	y_hat: has to be an numpy.ndarray, a vector
+	Returns:
+	J_value : has to be a float.
+	None if there is a dimension matching problem between X, Y or theta.
+	Raises:
+	This function should not raise any Exception.
+	"""
+	if len(y.shape) > 1:
+		return None
+	res = (1 / (2 * y.shape[0])) * (y_hat - y).dot(y_hat - y)
+	return abs(res)
+
 def mse_(y, y_hat):
 	"""
 	Description:
@@ -15,7 +33,10 @@ def mse_(y, y_hat):
 	Raises:
 	This function should not raise any Exceptions.
 	"""
-	pass
+	if len(y.shape) > 1 or y.shape != y_hat.shape :
+		return None
+	res = (1 / (y.shape[0])) * (y_hat - y).dot(y_hat - y)
+	return abs(res)
 
 def rmse_(y, y_hat):
 	"""
@@ -30,7 +51,10 @@ def rmse_(y, y_hat):
 	Raises:
 	This function should not raise any Exceptions.
 	"""
-	pass
+	if len(y.shape) > 1 or y.shape != y_hat.shape :
+		return None
+	res = (1 / (y.shape[0])) * (y_hat - y).dot(y_hat - y)
+	return sqrt(abs(res))
 
 def mae_(y, y_hat):
 	"""
@@ -45,7 +69,11 @@ def mae_(y, y_hat):
 	Raises:
 	This function should not raise any Exceptions.
 	"""
-	pass
+	if len(y.shape) > 1 or y.shape != y_hat.shape :
+		return None
+	res = (1 / (y.shape[0])) * abs(y_hat - y).sum()
+	return abs(res)
+
 
 def r2score_(y, y_hat):
 	"""
@@ -60,7 +88,17 @@ def r2score_(y, y_hat):
 	Raises:
 	This function should not raise any Exceptions.
 	"""
-	pass
+	if len(y.shape) > 1 or y.shape != y_hat.shape :
+		return None
+
+	top = (y - y_hat)
+	bot = (y - y.mean())
+	top = top ** 2
+	bot = bot ** 2
+	top = top.sum()
+	bot = bot.sum()
+	res = 1 - (top / bot)
+	return abs(res)
 
 
 if __name__ == "__main__":
@@ -91,15 +129,15 @@ if __name__ == "__main__":
 
 	print("# Mean absolute error")
 	## your implementation
-	print(mae(x,y))
+	print(mae_(x,y))
 	# Output:
-	1.7142857142857142
+	# 1.7142857142857142
 	## sklearn implementation
 	print(mean_absolute_error(x,y))
 	# Output:
 	# print(1.7142857142857142)
 	print()
-	
+
 	print("# R2-score")
 	## your implementation
 	print(r2score_(x,y))
