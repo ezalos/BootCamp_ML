@@ -1,7 +1,8 @@
 import numpy as np
 import sys
-sys.path.insert(1, '/home/ezalos/42/Bootcamp_Python/\
-bootcamp_machine-learning/day00/ex05')
+path = "/Users/ldevelle/42/42-AI/BootCamp_ML/day00/ex05"
+# path = '/home/ezalos/42/Bootcamp_Python/bootcamp_machine-learning/day00/ex05'
+sys.path.insert(1, path)
 from prediction import predict_
 
 def cost_(y, y_hat):
@@ -20,7 +21,7 @@ def cost_(y, y_hat):
 	if len(y.shape) > 1:
 		return None
 	res = (1 / (2 * y.shape[0])) * (y_hat - y).dot(y_hat - y)
-	return -res if res < 0 else res
+	return abs(res)
 
 if __name__ == "__main__":
 	X = np.array([0, 15, -9, 7, 12, 3, -21])
@@ -37,7 +38,7 @@ if __name__ == "__main__":
 
 	print("# Example 2:")
 	print(cost_(X, X))
-	print("# Output:")
+	# Output:
 	print("0.0")
 	print()
 
