@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 def add_intercept(x):
 	"""Adds a column of 1's to the non-empty numpy.ndarray x.
@@ -25,6 +27,8 @@ class MyLinearRegression():
 		self.max_iter = max_iter
 		self.theta = np.array(thetas)
 		self.n_cycle = n_cycle
+		self.graph = None
+		self.cost = []
 
 	def gradient(self, x, y):
 		"""Computes a gradient vector from three non-empty numpy.ndarray,
@@ -41,9 +45,46 @@ class MyLinearRegression():
 			This function should not raise any Exception.
 		"""
 		x_ = add_intercept(x)
+		# y_ = np.array(y).reshape((-1,1))
 		m = x_.shape[0]
-		j = (1/m) * (x_.T @ (x_ @ self.theta - y))
+		# print(x_.shape)
+		# print(y.shape)
+		# print(y_.shape)
+		# print((self.theta - y).shape)
+		# j = (1/m) * (x_.T @ ((x_ @ self.theta) - y)).T)).sum(axis=1)
+		# j = (1/m) * (x_.T @ ((x_ @ self.theta) - y)).mean(axis=1)
+		j = (x_.T @ ((x_ @ self.theta) - y)).mean(axis=1)
+		# print(j)
 		return j
+
+	def plot(self, x, y):
+		"""Plot the data and prediction line from three non-empty numpy.ndarray.
+		Args:
+		x: has to be an numpy.ndarray, a vector of dimension m * 1.
+		y: has to be an numpy.ndarray, a vector of dimension m * 1.
+		theta: has to be an numpy.ndarray, a vector of dimension 2 * 1.
+		Returns:
+		Nothing.
+		Raises:
+		This function should not raise any Exceptions.
+		"""
+		if self.graph == None:
+			plt.ion()
+			self.graph = True
+			# self.fig = plt.figure()
+			# self.graph = self.fig.add_subplot(111)
+		else:
+			plt.clf()
+			# self.graph.clear()
+		plt.plot(x, y, 'o')
+		plt.plot(x, self.theta[1] * x + self.theta[0])
+		if True:
+			y_hat = self.predict(x)
+			for x_i, y_hat_i, y_i in zip(x, y_hat, y):
+				plt.plot([x_i, x_i], [y_i, y_hat_i], 'r--')
+		# plt.draw()
+		plt.pause(0.000000000001)
+		plt.show()
 
 	def fit_(self, x, y):
 		"""
@@ -64,11 +105,15 @@ class MyLinearRegression():
 		Raises:
 			This function should not raise any Exception.
 		"""
+		self.cost = []
 		for i in range(self.max_iter):
-			if not i % 100000:
+			if not i % 10000:
 				print(i * 100 / self.max_iter, "%")
+				self.plot(x, y)
 				print(self.theta)
-			theta_ = self.gradient(x, y).sum(axis=1) * self.alpha
+				self.cost.append(self.mse_((add_intercept(x) @ self.theta), y).mean())
+				print(self.cost[-1])
+			theta_ = self.gradient(x, y) * self.alpha
 			self.theta = self.theta - theta_
 		return self.theta
 
@@ -108,6 +153,87 @@ class MyLinearRegression():
 		res = (1 / (2 * y.shape[0])) * (y_hat - y).dot(y - y_hat).sum()
 		return abs(res)
 		# return ((y_hat - y) ** 2).sum()
+
+	def mse_(self, y, y_hat):
+		"""
+		Description:
+		Calculate the MSE between the predicted output and the real output.
+		Args:
+		y: has to be a numpy.ndarray, a vector of dimension m * 1.
+		y_hat: has to be a numpy.ndarray, a vector of dimension m * 1.
+		Returns:
+		mse: has to be a float.
+		None if there is a matching dimension problem.
+		Raises:
+		This function should not raise any Exceptions.
+		"""
+		# if len(y.shape) > 1 or y.shape != y_hat.shape :
+		# 	return None
+		res = (1 / (y.shape[0])) * (y_hat - y).T.dot(y_hat - y)
+		return abs(res).sum(axis=1)
+
+	def rmse_(self, y, y_hat):
+		"""
+		Description:
+		Calculate the RMSE between the predicted output and the real output.
+		Args:
+		y: has to be a numpy.ndarray, a vector of dimension m * 1.
+		y_hat: has to be a numpy.ndarray, a vector of dimension m * 1.
+		Returns:
+		rmse: has to be a float.
+		None if there is a matching dimension problem.
+		Raises:
+		This function should not raise any Exceptions.
+		"""
+		if len(y.shape) > 1 or y.shape != y_hat.shape :
+			return None
+		res = (1 / (y.shape[0])) * (y_hat - y).dot(y_hat - y)
+		return sqrt(abs(res))
+
+	def mae_(self, y, y_hat):
+		"""
+		Description:
+		Calculate the MAE between the predicted output and the real output.
+		Args:
+		y: has to be a numpy.ndarray, a vector of dimension m * 1.
+		y_hat: has to be a numpy.ndarray, a vector of dimension m * 1.
+		Returns:
+		mae: has to be a float.
+		None if there is a matching dimension problem.
+		Raises:
+		This function should not raise any Exceptions.
+		"""
+		if len(y.shape) > 1 or y.shape != y_hat.shape :
+			return None
+		res = (1 / (y.shape[0])) * abs(y_hat - y).sum()
+		return abs(res)
+
+
+	def r2score_(self, y, y_hat):
+		"""
+		Description:
+		Calculate the R2score between the predicted output and the output.
+		Args:
+		y: has to be a numpy.ndarray, a vector of dimension m * 1.
+		y_hat: has to be a numpy.ndarray, a vector of dimension m * 1.
+		Returns:
+		r2score: has to be a float.
+		None if there is a matching dimension problem.
+		Raises:
+		This function should not raise any Exceptions.
+		"""
+		if len(y.shape) > 1 or y.shape != y_hat.shape :
+			return None
+
+		top = (y - y_hat)
+		bot = (y - y.mean())
+		top = top ** 2
+		bot = bot ** 2
+		top = top.sum()
+		bot = bot.sum()
+		res = 1 - (top / bot)
+		return abs(res)
+
 
 	def predict(self, x):
 		"""Computes the prediction vector y_hat from two non-empty numpy.ndarray.
