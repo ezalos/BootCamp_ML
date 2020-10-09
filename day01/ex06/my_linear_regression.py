@@ -25,7 +25,7 @@ class MyLinearRegression():
 	def __init__(self, thetas=[0, 0], alpha=0.001, n_cycle=1000, max_iter=10000):
 		self.alpha = alpha
 		self.max_iter = max_iter
-		self.theta = np.array(thetas)
+		self.theta = np.array(thetas).reshape(-1, 1)
 		self.n_cycle = n_cycle
 		self.graph = None
 		self.cost = []
@@ -45,17 +45,13 @@ class MyLinearRegression():
 			This function should not raise any Exception.
 		"""
 		x_ = add_intercept(x)
-		# y_ = np.array(y).reshape((-1,1))
 		m = x_.shape[0]
-		# print(x_.shape)
-		# print(y.shape)
-		# print(y_.shape)
-		# print((self.theta - y).shape)
-		# j = (1/m) * (x_.T @ ((x_ @ self.theta) - y)).T)).sum(axis=1)
-		# j = (1/m) * (x_.T @ ((x_ @ self.theta) - y)).mean(axis=1)
-		j = (x_.T @ ((x_ @ self.theta) - y)).mean(axis=1)
-		# print(j)
-		return j
+
+		hypothesis = (x_ @ self.theta)
+		loss = hypothesis - y
+		gradient = (x_.T @ loss) / m
+
+		return gradient
 
 	def plot(self, x, y):
 		"""Plot the data and prediction line from three non-empty numpy.ndarray.
@@ -78,7 +74,7 @@ class MyLinearRegression():
 			# self.graph.clear()
 		plt.plot(x, y, 'o')
 		plt.plot(x, self.theta[1] * x + self.theta[0])
-		if True:
+		if False:
 			y_hat = self.predict(x)
 			for x_i, y_hat_i, y_i in zip(x, y_hat, y):
 				plt.plot([x_i, x_i], [y_i, y_hat_i], 'r--')
@@ -105,9 +101,10 @@ class MyLinearRegression():
 		Raises:
 			This function should not raise any Exception.
 		"""
+		update = self.max_iter // 100
 		self.cost = []
-		for i in range(self.max_iter):
-			if not i % 10000:
+		for i in range(self.max_iter + 1):
+			if not i % update:
 				print(i * 100 / self.max_iter, "%")
 				self.plot(x, y)
 				print(self.theta)
@@ -150,7 +147,7 @@ class MyLinearRegression():
 		"""
 		# if len(y.shape) > 1:
 		# 	return None
-		res = (1 / (2 * y.shape[0])) * (y_hat - y).dot(y - y_hat).sum()
+		res = (1 / (2 * y.shape[0])) * (y_hat - y).T.dot(y - y_hat).sum()
 		return abs(res)
 		# return ((y_hat - y) ** 2).sum()
 
@@ -170,7 +167,8 @@ class MyLinearRegression():
 		# if len(y.shape) > 1 or y.shape != y_hat.shape :
 		# 	return None
 		res = (1 / (y.shape[0])) * (y_hat - y).T.dot(y_hat - y)
-		return abs(res).sum(axis=1)
+		# print(res)
+		return abs(res)
 
 	def rmse_(self, y, y_hat):
 		"""
