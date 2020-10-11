@@ -23,9 +23,19 @@ class MyLinearRegression():
 		My personnal linear regression class to fit like a boss.
 	"""
 	def __init__(self, thetas=[0, 0], alpha=0.001, n_cycle=1000, max_iter=10000):
+		"""
+		Description:
+			generator of the class, initialize self.
+		Args:
+			theta: has to be a list or a numpy array,
+				it is a vector of dimension (number of features + 1, 1).
+		Raises:
+			This method should noot raise any Exception.
+		"""
 		self.alpha = alpha
 		self.max_iter = max_iter
 		self.theta = np.array(thetas).reshape(-1, 1)
+		# self.theta = thetas
 		self.n_cycle = n_cycle
 		self.graph = None
 		self.cost = []
@@ -67,6 +77,8 @@ class MyLinearRegression():
 		if self.graph == None:
 			plt.ion()
 			self.graph = True
+			# plt.ylim((y.min(), y.max()))
+			# plt.xlim((x.min(), x.max()))
 			# self.fig = plt.figure()
 			# self.graph = self.fig.add_subplot(111)
 		else:

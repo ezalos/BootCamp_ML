@@ -1,0 +1,21 @@
+1 - What is a hypothesis and what is its goal?
+(It’s a second chance for you to say something intelligible, no need to thank us!)
+To predict y from x
+
+2 - What is the cost function and what does it represent?
+The cost of using hypothesis instead of y
+
+3 - What is Linear Gradient Descent and what does it do?
+(hint: you have to talk about J, its gradient and the theta parameters. . . )
+Derivative of the cost function, which is theta @ x.
+It allow us to follow the slope of the cost function, and so to minimize it
+
+4 - What happens if you choose a learning rate that is too large?
+We might jump around the minimum
+
+5 - What happens if you choose a very small learning rate, but still a sufficient number of cycles?
+We will take a long time to converge, but we will eventually find the minimum
+
+6 - Can you explain MSE and what it measures?
+It's the sum of the squared difference between real value and predicted values.
+Kinda like the sum of geometric distance between our linear regression and each of our data points.

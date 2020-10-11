@@ -54,8 +54,8 @@ def plot_cost(x, y):
 	"""
 	# plt.plot(x, y, 'o')
 	# x = np.linspace(-15,5,100)
-	plt.ylim((0, 200))
-	plt.xlim((-15, -5))
+	plt.ylim((10, 50))
+	plt.xlim((-13, -4.5))
 	ran = 15
 	upd = ran * 2 / 6
 	for t0 in np.arange(89 - ran, 89 + ran, upd):
@@ -68,11 +68,11 @@ def plot_cost(x, y):
 			cost_list.append(mse_c)
 			theta_list.append(t1)
 			# print(cost_list[-1])
-		label = "Th0=" + str(int(t0 * 10) / 10)
+		label = "θ[0]=" + str(int(t0 * 10) / 10)
 		print(label, "done!")
 		plt.plot(theta_list, cost_list, label=label)
-	plt.xlabel("Th1")
-	plt.ylabel("MSE(Th0, Th1)")
+	plt.xlabel("θ[1]")
+	plt.ylabel("MSE(θ[0], θ[1])")
 	plt.legend(loc='upper left')
 	plt.show()
 # lr = MyLR(thetas=[89.0, -8], alpha=5e-8, max_iter=1500000)
@@ -86,5 +86,5 @@ plot_cost(Xpill, Yscore)
 # lr.gradient(Xpill, Yscore)
 # print(lr.mse_(Yscore, lr.predict(Xpill)).mean())
 
-# lr.fit_(Xpill, Yscore)
+lr.fit_(Xpill, Yscore)
 # plot(Xpill, Yscore, lr.theta)
