@@ -22,7 +22,7 @@ class MyLinearRegression():
 	Description:
 		My personnal linear regression class to fit like a boss.
 	"""
-	def __init__(self, thetas=[0, 0], alpha=0.00015, n_cycle=100000, max_iter=100000):
+	def __init__(self, thetas=[0, 0], alpha=0.001, n_cycle=1000, max_iter=10000):
 		"""
 		Description:
 			generator of the class, initialize self.
@@ -77,13 +77,8 @@ class MyLinearRegression():
 		if self.graph == None:
 			plt.ion()
 			self.graph = True
-			# plt.ylim((y.min(), y.max()))
-			# plt.xlim((x.min(), x.max()))
-			# self.fig = plt.figure()
-			# self.graph = self.fig.add_subplot(111)
 		else:
 			plt.clf()
-			# self.graph.clear()
 		plt.plot(x, y, 'o')
 		plt.plot(x, self.theta[1] * x + self.theta[0])
 		if False:
