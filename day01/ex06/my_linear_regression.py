@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 
 def add_intercept(x):
@@ -77,13 +78,8 @@ class MyLinearRegression():
 		if self.graph == None:
 			plt.ion()
 			self.graph = True
-			# plt.ylim((y.min(), y.max()))
-			# plt.xlim((x.min(), x.max()))
-			# self.fig = plt.figure()
-			# self.graph = self.fig.add_subplot(111)
 		else:
 			plt.clf()
-			# self.graph.clear()
 		plt.plot(x, y, 'o')
 		plt.plot(x, self.theta[1] * x + self.theta[0])
 		if False:
@@ -92,6 +88,88 @@ class MyLinearRegression():
 				plt.plot([x_i, x_i], [y_i, y_hat_i], 'r--')
 		# plt.draw()
 		plt.pause(0.000000000001)
+		plt.show()
+
+	def multi_plot(self, x, y, cost=None):
+		"""Plot the data and prediction line from three non-empty numpy.ndarray.
+		Args:
+		x: has to be an numpy.ndarray, a vector of dimension m * 1.
+		y: has to be an numpy.ndarray, a vector of dimension m * 1.
+		theta: has to be an numpy.ndarray, a vector of dimension 2 * 1.
+		Returns:
+		Nothing.
+		Raises:
+		This function should not raise any Exceptions.
+		"""
+		if self.graph == None:
+			plt.ion()
+			self.graph = True
+			plot_dim = math.ceil(((x.shape[1] + 2) ** 0.5))
+			self.fig, axs = plt.subplots(plot_dim, plot_dim)
+			self.axs = []
+			for sublist in axs:
+			    for item in sublist:
+			        self.axs.append(item)
+			for i, feature in enumerate(x.T):
+				self.axs[i].plot(feature, y, 'o', markersize=3)
+			self.last_reg = []
+		else:
+			for fig_art in self.last_reg:
+				fig_art.remove()
+			self.last_reg = []
+			# plt.clf()
+		for i, feature in enumerate(x.T):
+			artist_fig, = self.axs[i].plot(feature, self.theta[1 + i] * feature + self.theta[0], c='r')
+			self.last_reg.append(artist_fig)
+		if cost:
+			artist_fig = self.axs[-2].scatter(x.T[0], y, s=3, c='b', label="h(x)")
+			self.last_reg.append(artist_fig)
+			artist_fig = self.axs[-2].scatter(x.T[0], self.predict(x), s=1, c='r', label="h(x)")
+			self.last_reg.append(artist_fig)
+			self.axs[-1].plot(cost, c='y')
+		plt.pause(0.000000000001)
+		plt.draw()
+		# plt.pause(0.000000000001)
+		# plt.show()
+
+	def scatter(self, x, y):
+		if self.graph == True:
+			plt.ioff()
+			self.graph = False
+		fig = plt.figure()
+		ax = plt.axes()
+		y_ = self.predict(x)
+		ax.scatter(x, y, c='b', marker='o', label="y")
+		ax.scatter(x, y_, c='r', marker='o', label="h(x)")
+		plt.show()
+
+
+	def multi_scatter(self, x, y):
+		"""Plot the data and prediction line from three non-empty numpy.ndarray.
+		Args:
+		x: has to be an numpy.ndarray, a vector of dimension m * 1.
+		y: has to be an numpy.ndarray, a vector of dimension m * 1.
+		theta: has to be an numpy.ndarray, a vector of dimension 2 * 1.
+		Returns:
+		Nothing.
+		Raises:
+		This function should not raise any Exceptions.
+		"""
+		if self.graph == True:
+			plt.ioff()
+			self.graph = False
+		plot_dim = int((x.shape[1] ** 0.5) + 1)
+		self.fig, axs = plt.subplots(plot_dim, plot_dim)
+		self.axs = []
+		for sublist in axs:
+			for item in sublist:
+				self.axs.append(item)
+
+		for i, feature in enumerate(x.T):
+			self.axs[i].scatter(feature, y, s=3, c='b', label="y")
+			self.axs[i].scatter(feature, self.theta[1 + i] * feature + self.theta[0], s=1, c='r', label="h(x)")
+		# self.axs[-1].scatter(x.T[0], y, s=3, c='b', label="h(x)")
+		# self.axs[-1].scatter(x.T[0], self.predict(x), s=1, c='r', label="h(x)")
 		plt.show()
 
 	def fit_(self, x, y):
@@ -118,12 +196,17 @@ class MyLinearRegression():
 		for i in range(self.max_iter + 1):
 			if not i % update:
 				print(i * 100 / self.max_iter, "%")
-				self.plot(x, y)
+				if x.shape[1] > 1:
+					if not i % (update * 5):
+						self.multi_plot(x, y, self.cost)
+				else:
+					self.plot(x, y)
 				print(self.theta)
 				self.cost.append(self.mse_((add_intercept(x) @ self.theta), y).mean())
 				print(self.cost[-1])
 			theta_ = self.gradient(x, y) * self.alpha
 			self.theta = self.theta - theta_
+		plt.close()
 		return self.theta
 
 	def cost_elem_(self, y_hat, y):
