@@ -58,9 +58,9 @@ big_theta = [[ 2.03333758e-06],
 # lr = MyLR(thetas=big_theta, alpha=5e-16, max_iter=10000000)
 # lr.fit_(x, Yscore)
 
-for i in range(2, 5):
+for i in range(3, 4):
 	x = add_polynomial_features(Xpill, i)
-	lr = MyLR(thetas=[0] * (i + 1), alpha=1 / (100 * (10 ** i)), max_iter=1000 * (10 ** i))
+	lr = MyLR(thetas=[0] * (i + 1), alpha=1 / (100 * (10 ** i)), max_iter=10000 * (10 ** i))
 	lr.fit_(x, Yscore)
 	cost.append(lr.cost)
 	plt.ioff()
