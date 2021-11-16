@@ -23,7 +23,7 @@ class MyLinearRegression():
 	Description:
 		My personnal linear regression class to fit like a boss.
 	"""
-	def __init__(self, thetas=[0, 0], alpha=0.00015, n_cycle=100000, max_iter=100000):
+	def __init__(self, thetas=[0, 0], alpha=0.001, n_cycle=100000, max_iter=100000):
 		"""
 		Description:
 			generator of the class, initialize self.
