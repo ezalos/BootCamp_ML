@@ -1,90 +1,53 @@
-from matrix import Matrix
-import numpy as np
+import math
+from TinyStatistician import TinyStatistician
 
-def test_error(data, shape, msg=""):
-	m_err = None
-	try:
-		print("TEST " + msg, "\n\tData: ", data, "\n\tShape: ", shape)
-		m_err = Matrix(data, shape)
-	except Exception as e:
-		print(e, "\nRES: ", m_err)
-		print("SUCCESS\n")
-		return True
-	else:
-		print("RES: ", m_err)
-		print("FAILURE\n")
-		return False
-
-
-
-test_error([[0.0, 1.0, 2.0, 3.0], [0.0, 2.0, 4.0]], None, "Diff size lines")
-test_error([[],[],[]], None, "Empty empty")
-test_error([], None, "Empty")
-test_error(None, None, "None None")
-test_error(None, (1,2,3), "Tuple 3")
-test_error(None, (1,), "Tuple 1")
-test_error(None, (), "Tuple void")
-
-print()
+tstat = TinyStatistician()
+a = [1, 42, 300, 10, 59]
+print("Values: ", a)
 print()
 
-def test_init(data, shape, msg=""):
-	print("INIT TEST: ", msg)
-	print("Data: ", data)
-	print("Shape: ", shape)
-	m = Matrix(data, shape)
-	print(m)
-	print()
-
-test_init(None, (2,3))
-test_init([[0]], (2,3))
-test_init([[0.0, 1.0, 2.0, 3.0],
-[0.0, 2.0, 4.0, 6.0]], None)
-test_init([[0.0, 1.0],
-[2.0, 3.0],
-[4.0, 5.0],
-[6.0, 7.0]], None)
-
-print()
+print("Mean: ")
+print(tstat.mean(a))
+print(82.4)
 print()
 
-def test_valid(v1, v2, ope):
-	v1_me = Matrix(v1)
-	v1_np = np.array(v1)
+print("median: ")
+print(tstat.median(a))
+print(42.0)
+print()
 
-	v2_me = Matrix(v2)
-	v2_np = np.array(v2)
+# print("quartile(a, 25): ")
+# print(tstat.quartile(a, 25))
+# print(10.0)
+# print()
 
-	if ope == "+":
-		res_me = v1_me + v2_me
-		res_np = v1_np + v2_np
-	elif ope == "-":
-		res_me = v1_me - v2_me
-		res_np = v1_np - v2_np
-	elif ope == "*":
-		res_me = v1_me * v2_me
-		res_np = v1_np.dot(v2_np)
-	elif ope == "/":
-		res_me = v1_me / v2_me
-		res_np = v1_np / v2_np
-	else:
-		print("Wrong ope")
-		return
+# print("quartile(a, 75): ")
+# print(tstat.quartile(a, 75))
+# print(59.0)
+# print()
 
-	print("test_valid")
-	if res_me.tolist() == res_np.tolist():
-		print("SUCCESS")
-	else:
-		print("Mat_1: ", v1)
-		print("Mat_1: ", v2)
-		print("OPE: ", ope)
-		print("NP: ", res_np)
-		print("ME: ", res_me)
-		print("FAILURE")
-	print()
+print("var: ")
+print(tstat.var(a))
+print(12279.439999999999)
+print()
 
-test_valid([[0.0, 1.0, 2.0, 3.0],
-[0.0, 2.0, 4.0, 6.0]], [[0.0, 1.0],
-[2.0, 3.0],
-[4.0, 5.0],
-[6.0, 7.0]], "*")
+print("std: ")
+print(tstat.std(a))
+print(110.81263465868862)
+print()
+
+data = [42, 7, 69, 18, 352, 3, 650, 754, 438, 2659]
+epsilon = 1e-5
+err = "Error, grade 0 :("
+tstat = TinyStatistician()
+assert abs(tstat.mean(data) - 499.2) < epsilon, err
+assert abs(tstat.median(data) - 210.5) < epsilon, err
+
+quartile = tstat.quartile(data)
+assert abs(quartile[0] - 18) < epsilon, err
+assert abs(quartile[1] - 650) < epsilon, err
+assert abs(tstat.percentile(data, 10) - 3) < epsilon, err
+assert abs(tstat.percentile(data, 28) - 18) < epsilon, err
+assert abs(tstat.percentile(data, 83) - 754) < epsilon, err
+assert abs(tstat.var(data) - 589194.56) < epsilon, err
+assert abs(tstat.std(data) - 767.5900989460456) < epsilon, err

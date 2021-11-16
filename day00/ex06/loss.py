@@ -1,10 +1,11 @@
 import numpy as np
 import sys
-sys.path.insert(1, '/home/ezalos/42/Bootcamp_Python/\
-bootcamp_machine-learning/day00/ex05')
+import os
+path = os.path.join(os.path.dirname(__file__), '..', 'ex04')
+sys.path.insert(1, path)
 from prediction import predict_
 
-def cost_elem_(y, y_hat):
+def loss_elem_(y, y_hat):
 	"""
 	Description:
 	Calculates all the elements (1/2*M)*(y_pred - y)^2 of the cost function.
@@ -21,7 +22,7 @@ def cost_elem_(y, y_hat):
 	res = np.array([cost_func(i, j, len(y)) for i, j in zip(y, y_hat)])
 	return res
 
-def cost_(y, y_hat):
+def loss_(y, y_hat):
 	"""
 	Description:
 	Calculates the value of cost function.
@@ -34,7 +35,7 @@ def cost_(y, y_hat):
 	Raises:
 	This function should not raise any Exception.
 	"""
-	return np.sum(cost_elem_(y, y_hat))
+	return np.sum(loss_elem_(y, y_hat))
 
 if __name__ == "__main__":
 	x1 = np.array([[0.], [1.], [2.], [3.], [4.]])
@@ -45,14 +46,14 @@ if __name__ == "__main__":
 
 	# Example 1:
 	print("# Example 1:")
-	print(cost_elem_(y1, y_hat1))
+	print(loss_elem_(y1, y_hat1))
 	# Output:
 	print("array([[0.], [0.1], [0.4], [0.9], [1.6]])")
 	print()
 
 	# Example 2:
 	print("# Example 2:")
-	print(cost_(y1, y_hat1))
+	print(loss_(y1, y_hat1))
 	# Output:
 	print(3.0)
 	print()
@@ -64,14 +65,14 @@ if __name__ == "__main__":
 
 	# Example 3:
 	print("# Example 3:")
-	print(cost_elem_(y2, y_hat2))
+	print(loss_elem_(y2, y_hat2))
 	# Output:
 	print("array([[1.3203125], [0.7503125], [0.0153125], [2.1528125]])")
 	print()
 
 	# Example 4:
 	print("# Example 4:")
-	print(cost_(y2, y_hat2))
+	print(loss_(y2, y_hat2))
 	# Output:
 	print(4.238750000000004)
 	print()
@@ -84,13 +85,21 @@ if __name__ == "__main__":
 
 	# Example 5:
 	print("# Example 5:")
-	print(cost_(y3, y_hat3))
+	print(loss_(y3, y_hat3))
 	# Output:
-	print(4.285714285714286)
+	print(2.142857142857143)
 	print()
 
 	# Example 6:
 	print("# Example 6:")
-	print(cost_(y3, y3))
+	print(loss_(y3, y3))
 	# Output:
 	print(0.0)
+
+	y_hat = np.array([[1], [2], [3], [4]])
+	y = np.array([[0], [0], [0], [0]])
+	
+	print(loss_elem_(y, y_hat))
+	print("[[0.125], [0.5], [1.125], [2]]")
+	print(loss_(y, y_hat))
+	print("3.75")

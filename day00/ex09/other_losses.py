@@ -98,13 +98,15 @@ def r2score_(y, y_hat):
 	top = top.sum()
 	bot = bot.sum()
 	res = 1 - (top / bot)
-	return abs(res)
+	return res
 
 
 if __name__ == "__main__":
 	print("# Example 1:")
 	x = np.array([0, 15, -9, 7, 12, 3, -21])
 	y = np.array([2, 14, -13, 5, 12, 4, -19])
+	# x = np.array([1, 2, 3, 4])
+	# y = np.array([0, 0, 0, 0])
 	print("# Mean squared error")
 	## your implementation
 	print(mse_(x,y))

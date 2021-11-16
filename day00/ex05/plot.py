@@ -1,6 +1,7 @@
 import sys
-sys.path.insert(1, '/home/ezalos/42/Bootcamp_Python/\
-bootcamp_machine-learning/day00/ex05')
+import os
+path = os.path.join(os.path.dirname(__file__), '..', 'ex04')
+sys.path.insert(1, path)
 from prediction import predict_
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,7 +19,7 @@ def plot(x, y, theta):
 	"""
 	plt.plot(x, y, 'o')
 
-	plt.plot(x, theta[1] * x + theta[0])
+	plt.plot(x, predict_(x, theta))
 	plt.show()
 	pass
 
@@ -34,3 +35,12 @@ if __name__ == "__main__":
 	theta2 = np.array([-1.5, 2])
 	plot(x, y, theta2)
 	# Output:
+
+	# Example 3:
+	theta3 = np.array([3, 0.3])
+	plot(x, y, theta3)
+	# Output:
+
+	# plot(np.array([0, 1]), np.array([0, 1]), np.array([0, 1]))
+	# plot(np.array([0, 1]), np.array([0, 1]), np.array([1, 1]))
+	# plot(np.array([0, 2]), np.array([0, 0]), np.array([-1, 1]))

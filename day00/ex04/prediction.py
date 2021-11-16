@@ -1,6 +1,6 @@
 import sys
-path = "/Users/ldevelle/42/42-AI/BootCamp_ML/day00/ex04"
-# path = '/home/ezalos/42/Bootcamp_Python/bootcamp_machine-learning/day00/ex05'
+import os
+path = os.path.join(os.path.dirname(__file__), '..', 'ex03')
 sys.path.insert(1, path)
 from tools import add_intercept
 import numpy as np
@@ -31,10 +31,12 @@ def predict_(x, theta):
 
 
 if __name__ == "__main__":
-	x = np.arange(1,6)
+	x = np.arange(1,6).reshape((-1,1))
 
+	print(x)
 	#Example 1:
-	theta1 = np.array([5, 0])
+	theta1 = np.array([5, 0]).reshape((-1,1))
+	print(theta1)
 	print(predict_(x, theta1))
 	# Ouput:
 	print("array([5., 5., 5., 5., 5.])")
