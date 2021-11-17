@@ -1,11 +1,22 @@
 import pandas as pd
 import numpy as np
 from sklearn.metrics import mean_squared_error
-from my_linear_regression import MyLinearRegression as MyLR
 import matplotlib.pyplot as plt
 
 
-data = pd.read_csv("are_blue_pills_magics.csv")
+import sys
+import os
+path = os.path.join(os.path.dirname(__file__), '..', 'utils')
+sys.path.insert(1, path)
+from prediction import predict_
+path = os.path.join(os.path.dirname(__file__), '..', 'ex03')
+sys.path.insert(1, path)
+from my_linear_regression import MyLinearRegression as MyLR
+
+
+file_path = os.path.join(os.path.dirname(__file__), 'are_blue_pills_magics.csv')
+data = pd.read_csv(file_path)
+
 Xpill = np.array(data["Micrograms"]).reshape(-1,1)
 Yscore = np.array(data["Score"]).reshape(-1,1)
 linear_model1 = MyLR(np.array([[89.0], [-8]]))

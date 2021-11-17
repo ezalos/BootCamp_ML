@@ -189,12 +189,9 @@ class MyLinearRegression():
 			This function should not raise any Exception.
 		"""
 		x_ = add_intercept(x)
-		for i in range(self.max_iter):
-			# theta_ = (self.gradient(x_, y).sum(axis=1) * self.alpha).reshape((-1, 1))
-			# self.theta = self.theta - theta_
-			gradient = self.gradient(x_, y).sum(axis=1)
-			theta_update = (gradient * self.alpha).reshape((-1, 1))
-			self.theta = self.theta - theta_update
+		for i in range(self.max_iter + 1):
+			theta_ = (self.gradient(x_, y).sum(axis=1) * self.alpha).reshape((-1, 1))
+			theta = theta - theta_
 		return self.theta
 
 	def cost_elem_(self, y_hat, y):
@@ -210,10 +207,10 @@ class MyLinearRegression():
 		Raises:
 			This function should not raise any Exception.
 		"""
-		# cost_func = lambda y, y_, m: (1 / (2 * m)) * (y - y_) ** 2
-		cost_func = lambda y, y_, m: (y - y_) ** 2
-		res = np.array([cost_func(i, j, len(y)) for i, j in zip(y, y_hat)])
-		return res
+		m = len(y)
+		cost = (1 / (2 * m)) * ((y_hat - y) ** 2).sum(axis=1)
+		# cost = (1 / (2 * m)) * np.abs((y_hat - y).dot(y - y_hat)).sum(axis=1)
+		return cost
 
 	def cost_(self, y_hat, y):
 		"""
@@ -228,8 +225,11 @@ class MyLinearRegression():
 		Raises:
 			This function should not raise any Exception.
 		"""
+		# if len(y.shape) > 1:
+		# 	return None
 		res = (1 / (2 * y.shape[0])) * (y_hat - y).T.dot(y - y_hat).sum()
 		return abs(res)
+		# return ((y_hat - y) ** 2).sum()
 
 	def mse_(self, y, y_hat):
 		"""
@@ -285,6 +285,7 @@ class MyLinearRegression():
 			return None
 		res = (1 / (y.shape[0])) * abs(y_hat - y).sum()
 		return abs(res)
+
 
 	def r2score_(self, y, y_hat):
 		"""
@@ -356,24 +357,23 @@ if __name__ == "__main__":
 	print(lr1.cost_elem_(lr1.predict(x),y))
 	# Output:
 	print("""
-array([[710.45867381],
-       [364.68645485],
-       [469.96221651],
-       [108.97553412],
-       [299.37111101]])
+	array([[77.72116511],
+	[49.33699664],
+	[72.38621816],
+	[37.29223426],
+	[78.28360514]])
 	""")
 
 	# Example 0.2:
 	print("# Example 0.2:")
 	print(lr1.cost_(lr1.predict(x),y))
 	# Output:
-	print(195.34539903032385)
-
+	print(315.0202193084312)
 
 	# Example 1.0:
 	print("# Example 1.0:")
 	lr2 = MyLR(thetas=[1, 1], alpha=5e-8, max_iter=1500000)
-	print(lr2.fit_(x, y))
+	# print(lr2.fit_(x, y))
 	print(lr2.theta)
 	# Output:
 	print("""
@@ -381,9 +381,6 @@ array([[710.45867381],
 	[1.1150909 ]])
 	""")
 
-
-	# import sys
-	# sys.exit()
 
 	# Example 1.1:
 	print("# Example 1.1:")
@@ -400,19 +397,19 @@ array([[710.45867381],
 
 	# Example 1.2:
 	print("# Example 1.2:")
-	print(lr2.cost_elem_(y, lr2.predict(x)))
+	print(lr2.cost_elem_(lr1.predict(x),y))
 	# Output:
 	print("""
-array([[486.66604863],
-       [115.88278416],
-       [ 84.16711596],
-       [ 85.96919719],
-       [ 35.71448348]])
+	array([[35.6749755 ],
+	[ 4.14286023],
+	[ 1.26440585],
+	[29.30443042],
+	[22.27765992]])
 	""")
 
 
 	# Example 1.3:
 	print("# Example 1.3:")
-	print(lr2.cost_(y, lr2.predict(x)))
+	print(lr2.cost_(lr1.predict(x),y))
 	# Output:
-	print("80.83996294128525")
+	print("92.66433192085971")
