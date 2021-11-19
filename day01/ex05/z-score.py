@@ -11,13 +11,9 @@ def zscore(x):
 	Raises:
 	This function shouldn't raise any Exception.
 	"""
-	# print("X: ", x.shape, x)
 	x = x.reshape(-1, 1)
-	# print("X: ", x.shape, x)
 	zs = x - x.mean()
-	# print("ZS: ", zs.shape, zs)
 	zs = zs / x.std()
-	# print("ZS: ", zs.shape, zs)
 	return zs
 
 
