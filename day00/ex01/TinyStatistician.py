@@ -24,7 +24,11 @@ class TinyStatistician():
 
 	def percentile(self, data, perc: int):
 		size = len(data)
-		return sorted(data)[int(math.ceil((size * perc) / 100)) - 1]
+		# print(f"{perc = }")
+		# print(f"{size = }")
+		idx = int(math.ceil((size * perc) / 100)) - 1
+		# print(f"{idx = }")
+		return sorted(data)[idx]
 
 	def quartile(self, x):
 		if len(x) == 0:
