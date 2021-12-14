@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import pickle
 import os
 import sys
+from minmax import Minmax
 
 path = os.path.join(os.path.dirname(__file__), '..', 'ex05')
 sys.path.insert(1, path)
@@ -11,48 +12,50 @@ from my_linear_regression import MyLinearRegression as MyLR
 path = os.path.join(os.path.dirname(__file__), '..', 'ex07')
 sys.path.insert(1, path)
 from polynomial_model import add_polynomial_features
-path = os.path.join(os.path.dirname(__file__), '..', 'ex08')
-sys.path.insert(1, path)
-from polynomial_train import continuous_plot
 path = os.path.join(os.path.dirname(__file__), '..', 'ex09')
 sys.path.insert(1, path)
 from data_spliter import data_spliter
 
 
-def model_save(data, poly):
-    path = os.path.join(os.path.dirname(__file__), f"model_{poly}.pkl")
-    with open(path, 'wb') as f:
-        pickle.dump(data, f)
-        
 def model_load(poly):
     path = os.path.join(os.path.dirname(__file__), f"model_{poly}.pkl")
     with open(path, 'rb') as f:
         data = pickle.load(f)
     return data
 
-def continuous_plot(x, y, i, lr):
-	continuous_x = np.arange(1,7.01, 0.01).reshape(-1,1)
-	x_ = add_polynomial_features(continuous_x, i)
-	y_hat = lr.predict(x_)
-	plt.scatter(x.T[0],y)
-	plt.plot(continuous_x, y_hat, color='orange')
-	plt.show()
 
-def one_loop(X, Y, poly=1):
-    X_poly = add_polynomial_features(X, poly)
-    X_train, X_test, Y_train, Y_test = data_spliter(X_poly, Y, 0.8)
+def multi_scatter(X, pred_price, true_price, costs):
+    plot_dim = 2
+    fig, axs_ = plt.subplots(plot_dim, plot_dim)
+    axs = []
+    for sublist in axs_:
+        for item in sublist:
+            axs.append(item)
+    
+    for idx_feature, feature in enumerate(X.T):
+        for idx_pred, y_hat in enumerate(pred_price):
+            c = ['r', 'y', 'm', 'b']
+            color = c[idx_pred]
+            axs[idx_feature].scatter(feature, y_hat, s=.1, c=color, label=f"Poly {idx_pred}")
+        axs[idx_feature].scatter(feature, true_price, s=0.1, c='g', label="True")
+        axs[idx_feature].legend()
 
-    theta = [0] * (poly * X.shape[1] + 1)
-    alpha=1 / (100 * (10 ** poly))
+    legend = [f"Pol {i}" for i in range(1, len(costs) + 1)]
+    axs[-1].bar(legend,costs)
+    plt.show()
 
-    lr = MyLR(thetas=theta, alpha=alpha, max_iter=50000)
 
-    lr.fit_(X_train, Y_train)
-    model_save(lr, poly)
-    continuous_plot(X_poly, Y, poly, lr)
-    cost = lr.cost_(Y_test, lr.predict(X_test))
-    print(f"{cost = }")
-    return cost
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+
+    ms = ["v", "^", "<", ">"]
+    c = ['r', 'y', 'm', 'b']
+
+    ax.scatter(X[:,1], X[:,2], true_price, marker="o", c="g", label="True")
+    for idx_pred, y_hat in enumerate(pred_price):
+        ax.scatter(X[:,1], X[:,2], y_hat, marker=ms[idx_pred], c=c[idx_pred], label=f"Poly {idx_pred}")
+    ax.legend()
+    plt.show()
 
 
 if __name__ == "__main__":
@@ -61,10 +64,24 @@ if __name__ == "__main__":
     X = np.array(data[["weight","prod_distance","time_delivery"]]).reshape(-1,3)
     Y = np.array(data["target"]).reshape(-1,1)
 
-    cost = []
+    std_X = Minmax()
+    std_X.fit(X)
+    X_ = std_X.apply(X)
+
+
+    costs = []
+    preds = []
     for i in range(1, 5):
-        c = one_loop(X, Y, poly=i)
-        cost.append(c)
+        print(f"Poly {i}")
+        X_poly = add_polynomial_features(X_, i)
 
+        lr = model_load(i)
+        lr.predict(X_poly)
 
-    # my_lreg.multi_scatter(X,Y)
+        y_hat = lr.predict(X_poly)
+        cost = lr.cost_(Y, y_hat)
+        print(f"{cost = }")
+        costs.append(cost)
+        preds.append(y_hat)
+
+    multi_scatter(X, preds, Y, costs)
