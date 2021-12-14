@@ -22,6 +22,7 @@ if __name__ == "__main__":
 	my_lreg.fit_(X_1, Y)
 	print(f"{my_lreg.theta = }")
 	print(f"Answer should be close to [[647.04], [-12.99]]")
+	print(f"MSE Score: {my_lreg.mse_(Y, my_lreg.predict(X_1)).mean()}")
 	# my_lreg.scatter(X_1, Y)
 	
 	print("Ex 1.b")
@@ -30,6 +31,7 @@ if __name__ == "__main__":
 	my_lreg.fit_(X_2, Y)
 	print(f"{my_lreg.theta = }")
 	print(f"Answer should be close to [[39.88920787  4.32705362]]")
+	print(f"MSE Score: {my_lreg.mse_(Y, my_lreg.predict(X_2)).mean()}")
 	# my_lreg.scatter(X_2, Y)
 	
 	print("Ex 1.c")
@@ -38,6 +40,7 @@ if __name__ == "__main__":
 	my_lreg.fit_(X_3, Y)
 	print(f"{my_lreg.theta = }")
 	print(f"Answer should be close to [[744.67913252  -2.86265137]]")
+	print(f"MSE Score: {my_lreg.mse_(Y, my_lreg.predict(X_3)).mean()}")
 	# my_lreg.scatter(X_3, Y)
 
 	my_lreg = MyLR([1.0, 1.0, 1.0, 1.0], alpha=9e-5, max_iter=500000)
@@ -50,6 +53,7 @@ if __name__ == "__main__":
 	print(my_lreg.theta)
 	# print("array([[334.994...],[-22.535...],[5.857...],[-2.586...]])")
 	print("array([[383.94598482 -24.29984158   5.67375056  -2.66542654]])")
+	print(f"MSE Score: {my_lreg.mse_(Y, my_lreg.predict(X)).mean()}")
 	print()
 	my_lreg.multi_scatter(X,Y)
 
