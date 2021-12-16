@@ -24,29 +24,11 @@ class MyLogisticRegression():
 		self.theta = self.theta.reshape((-1, 1))
 		z = x.dot(self.theta)
 		a = sigmoid_(z)
-
-	def loss_elem_(self, x, y):
-		pass
-
-	def loss_(self, x, y):
-		eps = 1e-15
-		m = y.shape[0]
-		y_hat = self.predict_(x)
-
-
-		log_true = np.dot(y.T, np.log(y_hat + eps))
-		log_false = np.dot((1 - y).T, np.log((1 - y_hat) + eps))
-		log_prob = log_true + log_false
-
-		J = - (1 / m) * log_prob
-		J = np.squeeze(J)
-
-		return J
+		return a
 
 	def gradient(self, x, y):
 		m = x.shape[0]
 
-		# hypothesis = x_.dot(theta)
 		hypothesis = self.predict_(x)
 		loss = hypothesis - y
 		grad = (x.T @ loss) / m
@@ -60,6 +42,31 @@ class MyLogisticRegression():
 			theta_update = (gradient * self.alpha).reshape((-1, 1))
 			self.theta = self.theta - theta_update
 		return self.theta
+
+	def loss_elem_(self, x, y):
+		eps = 1e-15
+		m = y.shape[0]
+		y_hat = self.predict_(x)
+		def cost_func(y, y_, m):
+			log_true = (y * np.log(y_ + eps))
+			log_false = ((1 - y) * np.log(1 - y_ + eps))
+			return (log_true + log_false) / m
+		res = np.array([cost_func(i, j, len(y)) for i, j in zip(y, y_hat)])
+		return res
+
+	def loss_(self, x, y):
+		eps = 1e-15
+		m = y.shape[0]
+		y_hat = self.predict_(x)
+
+		log_true = np.dot(y.T, np.log(y_hat + eps))
+		log_false = np.dot((1 - y).T, np.log((1 - y_hat) + eps))
+		log_prob = log_true + log_false
+
+		J = - (1 / m) * log_prob
+		J = np.squeeze(J)
+
+		return J
 
 if __name__ == "__main__":
 	X = np.array([[1., 1., 2., 3.], [5., 8., 13., 21.], [3., 5., 9., 14.]])
