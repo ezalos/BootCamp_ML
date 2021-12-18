@@ -93,43 +93,26 @@ if __name__ == "__main__":
 	Y = np.array([[1], [0], [1]])
 
 	MyLR = MyLogisticRegression
-	mylr = MyLR([2, 0.5, 7.1, -4.3, 2.09], penalty=None)
+	# mylr = MyLR([2, 0.5, 7.1, -4.3, 2.09], penalty=None)
+	mylr = MyLR([2, 0.5, 7.1, -4.3, 2.09])
 
 	print("# Example 0:")
 	print(f"{mylr.predict_(X) = }")
-	print("# Output:")
-	print("""array([[0.99930437],
-	[1. ],
-	[1. ]])""")
 	print()
 
 	print("# Example 1:")
 	print(f"{mylr.loss_(X,Y) = }")
-	print("# Output:")
-	print("11.513157421577004")
 	print()
 
 	print("# Example 2:")
 	print(f"{mylr.fit_(X, Y) = }")
 	print(f"{mylr.theta = }")
-	print("# Output:")
-	print("""array([[ 1.04565272],
-	[ 0.62555148],
-	[ 0.38387466],
-	[ 0.15622435],
-	[-0.45990099]])""")
 	print()
 
 	print("# Example 3:")
 	print(f"{mylr.predict_(X) = }")
-	print("# Output:")
-	print("""array([[0.72865802],
-	[0.40550072],
-	[0.45241588]])""")
 	print()
 
 	print("# Example 4:")
 	print(f"{mylr.loss_(X,Y) = }")
-	print("# Output:")
-	print("0.5432466580663214")
 	print()
