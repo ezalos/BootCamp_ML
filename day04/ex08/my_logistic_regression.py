@@ -13,10 +13,11 @@ class MyLogisticRegression():
 	Description:
 	My personnal logistic regression to classify things.
 	"""
-	def __init__(self, theta, alpha=0.001, max_iter=1000):
+	def __init__(self, theta, alpha=0.001, max_iter=10000, penalty='l2'):
 		self.alpha = alpha
 		self.max_iter = max_iter
 		self.theta = np.array(theta).reshape(-1, 1)
+		self.penalty = penalty
 
 	def predict_(self, x):
 		if x.shape[1] + 1 == self.theta.shape[0]:
@@ -26,14 +27,23 @@ class MyLogisticRegression():
 		a = sigmoid_(z)
 		return a
 
-	def gradient(self, x, y):
+	def gradient(self, x, y, lambda_=0.5):
 		m = x.shape[0]
 
 		hypothesis = self.predict_(x)
 		loss = hypothesis - y
-		grad = (x.T @ loss) / m
+		grad = (x.T @ loss)
 
-		return grad
+    
+		theta_ = self.theta.copy()
+		theta_[0] = 0
+
+		if self.penalty != 'l2':
+			lambda_ = 0
+		regularization = lambda_ * theta_
+		reg_gradient = (1/m) * (grad + regularization)
+
+		return reg_gradient
 
 	def fit_(self, x, y):
 		x_ = add_intercept(x)
@@ -43,18 +53,23 @@ class MyLogisticRegression():
 			self.theta = self.theta - theta_update
 		return self.theta
 
-	def loss_elem_(self, x, y):
+	def loss_elem_(self, x, y, lambda_=0.5):
 		eps = 1e-15
 		m = y.shape[0]
 		y_hat = self.predict_(x)
-		def cost_func(y, y_, m):
+		if self.penalty != 'l2':
+			lambda_ = 0
+		def cost_func(y, y_, m, lambda_):
 			log_true = (y * np.log(y_ + eps))
 			log_false = ((1 - y) * np.log(1 - y_ + eps))
-			return (log_true + log_false) / m
-		res = np.array([cost_func(i, j, len(y)) for i, j in zip(y, y_hat)])
+			hyp_cost=  (log_true + log_false) / m
+			reg = lambda_ * (np.dot(self.theta[1:], self.theta[1:])) / (2 * m)
+			res = hyp_cost + reg
+			return res
+		res = np.array([cost_func(i, j, len(y), lambda_) for i, j in zip(y, y_hat)])
 		return res
 
-	def loss_(self, x, y):
+	def loss_(self, x, y, lambda_=0.5):
 		eps = 1e-15
 		m = y.shape[0]
 		y_hat = self.predict_(x)
@@ -66,14 +81,19 @@ class MyLogisticRegression():
 		J = - (1 / m) * log_prob
 		J = np.squeeze(J)
 
-		return J
+		if self.penalty != 'l2':
+			lambda_ = 0
+		reg = lambda_ * (np.dot(self.theta[1:].T, self.theta[1:])) / (2 * m)
+
+		res = J + reg
+		return res
 
 if __name__ == "__main__":
 	X = np.array([[1., 1., 2., 3.], [5., 8., 13., 21.], [3., 5., 9., 14.]])
 	Y = np.array([[1], [0], [1]])
 
 	MyLR = MyLogisticRegression
-	mylr = MyLR([2, 0.5, 7.1, -4.3, 2.09])
+	mylr = MyLR([2, 0.5, 7.1, -4.3, 2.09], penalty=None)
 
 	print("# Example 0:")
 	print(f"{mylr.predict_(X) = }")
