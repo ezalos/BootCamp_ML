@@ -68,7 +68,7 @@ def one_loop(X, Y, poly=1):
     theta = [0] * (poly * X.shape[1] + 1)
     alpha = 1e-2
 
-    lr = MyLR(thetas=theta, alpha=alpha, max_iter=10000)
+    lr = MyLR(thetas=theta, alpha=alpha, max_iter=100000)
 
     lr.fit_(X_train, Y_train)
     model_save(lr, poly)

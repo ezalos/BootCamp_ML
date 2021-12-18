@@ -45,10 +45,10 @@ class MyLogisticRegression():
 
 		return reg_gradient
 
-	def fit_(self, x, y):
+	def fit_(self, x, y, lambda_=0.5):
 		x_ = add_intercept(x)
 		for i in range(self.max_iter):
-			gradient = self.gradient(x_, y).sum(axis=1)
+			gradient = self.gradient(x_, y, lambda_).sum(axis=1)
 			theta_update = (gradient * self.alpha).reshape((-1, 1))
 			self.theta = self.theta - theta_update
 		return self.theta

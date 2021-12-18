@@ -69,10 +69,14 @@ if __name__ == "__main__":
     costs = []
     preds = []
     for i in range(1, 5):
+        if i != 4:
+            continue
         print(f"Poly {i}")
         X_poly = add_polynomial_features(X_, i)
 
         lr = model_load(i)
+        X_train, X_test, Y_train, Y_test = data_spliter(X_poly, Y, 0.8)
+        lr.fit_(X_train, Y_train)
         lr.predict(X_poly)
 
         y_hat = lr.predict(X_poly)
